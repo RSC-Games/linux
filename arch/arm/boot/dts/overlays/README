@@ -2421,15 +2421,39 @@ Name:   i2c-sensor
 Info:   Adds support for a number of I2C barometric pressure, temperature,
         light level and chemical sensors on i2c_arm
 Load:   dtoverlay=i2c-sensor,<param>=<val>
-Params: addr                    Set the address for the ADS7828, ADS7830,
-                                ADT7410, AS73211, AS7331, BH1750, BME280,
-                                BME680, BMP280, BMP380, BMP58x, CCS811, DS1621,
-                                HDC100X, HDC3020, JC42, LM75, MCP980x,
+Params: addr                    Set the address for the AD799X, ADS7828,
+                                ADS7830, ADT7410, AS73211, AS7331, BH1750,
+                                BME280, BME680, BMP280, BMP380, BMP58x, CCS811,
+                                DS1621, HDC100X, HDC3020, JC42, LM75, MCP980x,
                                 MPU6050, MPU9250, MS5637, MS5803, MS5805,
-                                MS5837, MS8607, SHT3x or TMP102
+                                MS5837, MS8607, SHT3x, TMP102 or VEML6030.
 
         i2c-bus                 Supports all the standard I2C bus selection
                                 parameters - see "dtoverlay -h i2c-bus"
+
+        ad7991                  Select the Analog Devices AD7991 ADC
+                                Valid addresses 0x28-0x29, default 0x28
+
+        ad7992                  Select the Analog Devices AD7992 ADC
+                                Valid addresses 0x20-0x24, default 0x20
+
+        ad7993                  Select the Analog Devices AD7993 ADC
+                                Valid addresses 0x20-0x24, default 0x20
+
+        ad7994                  Select the Analog Devices AD7994 ADC
+                                Valid addresses 0x20-0x24, default 0x20
+
+        ad7995                  Select the Analog Devices AD7995 ADC
+                                Valid addresses 0x28-0x29, default 0x28
+
+        ad7997                  Select the Analog Devices AD7997 ADC
+                                Valid addresses 0x20-0x24, default 0x20
+
+        ad7998                  Select the Analog Devices AD7998 ADC
+                                Valid addresses 0x20-0x24, default 0x20
+
+        ad7999                  Select the Analog Devices AD7999 ADC
+                                Valid address 0x29 (the default)
 
         ads7828                 Select the TI ADS7828 50kHz 8-channel 12bit ADC
                                 Valid addresses 0x48-0x4b, default 0x48
@@ -2576,6 +2600,8 @@ Params: addr                    Set the address for the ADS7828, ADS7830,
                                 measurement in uOhms.  (ina238 only, disabled
                                 by default)
 
+        scd4x                   Select the Sensirion SCD40/41 CO2 sensors.
+
         sht3x                   Select the Sensirion SHT3x temperature and
                                 humidity sensors. Valid addresses 0x44-0x45,
                                 default 0x44
@@ -2603,8 +2629,13 @@ Params: addr                    Set the address for the ADS7828, ADS7830,
         tmp102                  Select the Texas Instruments TMP102 temp sensor
                                 Valid addresses 0x48-0x4b, default 0x48
 
+        tmp117                  Select the Texas Instruments TMP117 temp sensor
+                                Valid addresses 0x48-0x4b, default 0x48
+
         tsl4531                 Select the AMS TSL4531 digital ambient light
                                 sensor
+
+        veml6030                Select the Vishay VEML6030 ambient light sensor
 
         veml6040                Select the Vishay VEML6040 RGBW light sensor
 
@@ -2745,6 +2776,17 @@ Name:   i2s-master-dac
 Info:   Configures a generic I2S DAC soundcard that acts as a clock master.
 Load:   dtoverlay=i2s-master-dac
 Params: <None>
+
+
+Name:   ilitek-ts-i2c
+Info:   Enables I2C connected Ilitek 23XX, 25XX, and 213X touch controllers
+        using GPIO 4 (pin 7 on GPIO header) for interrupt.
+Load:   dtoverlay=ilitek-ts-i2c,<param>=<val>
+Params: interrupt               GPIO used for interrupt (default 4)
+        invx                    Touchscreen inverted x axis
+        invy                    Touchscreen inverted y axis
+        swapxy                  Touchscreen swapped x y axis
+        i2c-path                Override I2C path to allow for i2c-gpio buses
 
 
 Name:   ilitek251x
@@ -3726,6 +3768,10 @@ Params: rotation                Mounting rotation of the camera sensor (0 or
         clk-continuous          Switch to continuous mode on the CSI clock lane,
                                 which increases the maximum frame rate slightly.
                                 Appears not to work on Pi3.
+        trigger-mode            Enable external trigger mode (0 = normal,
+                                1 = triggered). In this mode, the sensor outputs
+                                a frame only when triggered by a rising edge
+                                on the FSIN input pin.
 
 
 Name:   papirus
@@ -5279,6 +5325,8 @@ Params: ctsrts                  Enable CTS/RTS on GPIOs 2-3 (default off)
                                 drive the OE pin of an RS485 transceiver (i.e.
                                 MAX3078E); also enables the UARTx ctsrts
                                 parameter, as RTS is required (default off).
+        rs485_full_duplex       When RS485 mode is enabled, enables receiving of
+                                data while sending data (default off)
         rs485_invert_rts        When RS485 mode is enabled, inverts the RTS
                                 line from active-high (default) to active-low.
         rs485_rts_on_delay      When RS485 mode is enabled, sets the delay (in
@@ -5303,6 +5351,8 @@ Params: ctsrts                  Enable CTS/RTS on GPIOs 6-7 (default off)
                                 drive the OE pin of an RS485 transceiver (i.e.
                                 MAX3078E); also enables the UARTx ctsrts
                                 parameter, as RTS is required (default off).
+        rs485_full_duplex       When RS485 mode is enabled, enables receiving of
+                                data while sending data (default off)
         rs485_invert_rts        When RS485 mode is enabled, inverts the RTS
                                 line from active-high (default) to active-low.
         rs485_rts_on_delay      When RS485 mode is enabled, sets the delay (in
@@ -5327,6 +5377,8 @@ Params: ctsrts                  Enable CTS/RTS on GPIOs 10-11 (default off)
                                 drive the OE pin of an RS485 transceiver (i.e.
                                 MAX3078E); also enables the UARTx ctsrts
                                 parameter, as RTS is required (default off).
+        rs485_full_duplex       When RS485 mode is enabled, enables receiving of
+                                data while sending data (default off)
         rs485_invert_rts        When RS485 mode is enabled, inverts the RTS
                                 line from active-high (default) to active-low.
         rs485_rts_on_delay      When RS485 mode is enabled, sets the delay (in
@@ -5351,6 +5403,8 @@ Params: ctsrts                  Enable CTS/RTS on GPIOs 14-15 (default off)
                                 drive the OE pin of an RS485 transceiver (i.e.
                                 MAX3078E); also enables the UARTx ctsrts
                                 parameter, as RTS is required (default off).
+        rs485_full_duplex       When RS485 mode is enabled, enables receiving of
+                                data while sending data (default off)
         rs485_invert_rts        When RS485 mode is enabled, inverts the RTS
                                 line from active-high (default) to active-low.
         rs485_rts_on_delay      When RS485 mode is enabled, sets the delay (in
@@ -5720,6 +5774,7 @@ Params: 3_4_inch_c              3.4" 800x800 2lane
         5_5_inch_a              5.5" 720x1280 2lane
         7_0_inch_a              7.0" A 720x1280 2lane
         7_0_inch_b              7.0" B 720x1280 2lane
+        7_0_inch_c              7.0" C 1024x600 2lane
         8_0_inch_a              8.0" 800x1280 2lane
         8_0_inch_a_4lane        8.0" 800x1280 4lane
         8_8_inch_a              8.8" 480x1920 2lane
@@ -5785,8 +5840,8 @@ Params: cma-512                 CMA is 512MB
         audio1                  Enable or disable audio over HDMI1 (default
                                 "on")
         noaudio                 Disable all HDMI audio (default "off")
-        composite               Enable the composite output (disables all other
-                                outputs)
+        composite               Enable the composite output (default "off")
+                                N.B. Disables all other outputs on a Pi 4.
         nohdmi                  Disable both HDMI 0 & 1 outputs
         nohdmi0                 Disable HDMI 0 output
         nohdmi1                 Disable HDMI 1 output
@@ -5797,12 +5852,21 @@ Info:   See vc4-kms-v3d-pi4 (this is the Pi 5 version)
 
 
 Name:   vc4-kms-vga666
-Info:   Enable the VGA666 (resistor ladder ADC) for the vc4-kms-v3d driver.
+Info:   Enable the VGA666 (resistor ladder DAC) for the vc4-kms-v3d driver.
         Requires vc4-kms-v3d to be loaded.
 Load:   dtoverlay=vc4-kms-vga666,<param>
 Params: ddc                     Enables GPIOs 0&1 as the I2C to read the EDID
                                 from the display. NB These are NOT 5V tolerant
                                 GPIOs, therefore level shifters are required.
+
+
+Name:   vec-gpio-pi5
+Info:   Overlay to output composite video as an 8-bit digital code over GPIO
+        pins 4-11, for Raspberry Pi 5 series only. Requires composite video
+        to be enabled; incompatible with any use of DPI or VGA666.
+Load:   dtoverlay=vec-gpio-pi5,<param>
+Params: clk                     Enable GPIO 0 (clock, 108 MHz)
+        gpio27                  Enable GPIO 27 (duplicate MSB)
 
 
 Name:   vga666
@@ -5945,8 +6009,10 @@ Params: brightness              Set the initial brightness for the LEDs. The
                                 a single byte to offset 0 of the device. Note
                                 that brightness is a multiplier for the pixel
                                 values, and only white pixels can reach the
-                                maximum visible brightness. (range 0-255,
-                                default 255)
+                                maximum visible brightness. N.B. Setting
+                                brightness to 0 acctivates pass-through mode,
+                                disabling all brightness and gamma processing.
+                                (range 0-255, default 255)
         dev_name                The name for the /dev/ device entry. Note that
                                 if the name includes '%d' it will be replaced
                                 by the instance number. (default 'leds%d')
@@ -5960,16 +6026,17 @@ Params: brightness              Set the initial brightness for the LEDs. The
 Troubleshooting
 ===============
 
-If you are experiencing problems that you think are DT-related, enable DT
-diagnostic output by adding this to /boot/config.txt:
+If you are experiencing problems that you think are DT-related, first check for
+error messages from the firmware by running:
+
+    sudo vclog -m
+
+To see more details about the changes to the Device Tree, add the following to
+/boot/firmware/config.txt:
 
     dtdebug=on
 
-and rebooting. Then run:
-
-    sudo vcdbg log msg
-
-and look for relevant messages.
+and reboot, then use vclog as above.
 
 Further reading
 ===============
@@ -5977,4 +6044,4 @@ Further reading
 This is only meant to be a quick introduction to the subject of Device Tree on
 Raspberry Pi. There is a more complete explanation here:
 
-http://www.raspberrypi.org/documentation/configuration/device-tree.md
+https://www.raspberrypi.com/documentation/computers/configuration.html#device-trees-overlays-and-parameters
