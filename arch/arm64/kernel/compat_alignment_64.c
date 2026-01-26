@@ -567,7 +567,7 @@ int ls_cas_fixup(u32 instr, struct pt_regs *regs, struct fixupDescription* desc)
 
 	u64 readval = 0;
 	int bcount = desc->width / 8;
-	u64 addr = desc->addr;
+	u64 addr = (u64)desc->addr;
 	int r;
 	uint8_t  tmp;
 
@@ -690,7 +690,7 @@ __attribute__((always_inline)) inline int ls_reg_unsigned_imm(u32 instr, struct 
 	desc->simd = simd;
 	desc->extendSign = extend_sign;
 	u64 addr = regs->regs[Rn];
-	desc->addr = addr + (imm12 << width_shift);
+	desc->addr = (void*)(addr + (imm12 << width_shift));
 	///printk("unsigned imm\n");
 
 	return do_ls_fixup(instr, regs, desc);
@@ -797,7 +797,7 @@ __attribute__((always_inline)) inline int lsr_unscaled_immediate_fixup(u32 instr
 		fullImm = imm9;
 	}
 	u64 addr = regs->regs[Rn];
-	desc->addr = addr + fullImm;
+	desc->addr = (void*)(addr + fullImm);
 	desc->pair = 0;
 
 	int load = opc & 1;
@@ -894,7 +894,7 @@ __attribute__((always_inline)) inline int system_fixup(u32 instr, struct pt_regs
 			uint64_t dczid_el0 = read_sysreg_s(SYS_DCZID_EL0);
 			if(!((dczid_el0 >> DCZID_EL0_DZP_SHIFT) & 1)){
 				uint16_t blksize = 4 << (dczid_el0 & 0xf);
-				r = memset_io_user(blksize, 0, regs->user_regs.regs[Rt]);
+				r = memset_io_user(blksize, 0, (void*)regs->user_regs.regs[Rt]);
 				arm64_skip_faulting_instruction(regs, 4);
 				return r;
 			} else {
